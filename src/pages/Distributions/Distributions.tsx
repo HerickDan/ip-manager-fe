@@ -1,11 +1,18 @@
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { useDistributions, useBeneficiaries } from '../../hooks';
 import './Distributions.css';
+
+interface DistributionForm {
+  beneficiaryId: string;
+  quantity: number;
+  moreThanOne: boolean;
+  justify: string;
+}
 
 export function Distributions() {
   const { register, loading, error } = useDistributions();
   const { findById } = useBeneficiaries();
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<DistributionForm>({
     beneficiaryId: '',
     quantity: 1,
     moreThanOne: false,
@@ -14,11 +21,11 @@ export function Distributions() {
   const [success, setSuccess] = useState(false);
   const [beneficiaryName, setBeneficiaryName] = useState('');
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target as HTMLInputElement;
     setForm((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
     }));
   };
 
@@ -34,7 +41,7 @@ export function Distributions() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setSuccess(false);
     try {

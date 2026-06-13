@@ -1,24 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type FormEvent } from 'react';
 import { useBaskets } from '../../hooks';
 import './Stock.css';
 
 export function Stock() {
   const { stock, getStock, addStock, loading } = useBaskets();
   const [quantity, setQuantity] = useState('');
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     getStock();
   }, [getStock]);
 
-  const handleAddStock = async (e) => {
+  const handleAddStock = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
     try {
       await addStock(Number(quantity));
       setQuantity('');
       getStock();
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message);
     }
   };

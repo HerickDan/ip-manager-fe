@@ -1,9 +1,17 @@
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks';
 
+interface RegisterForm {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  description: string;
+}
+
 export function Register() {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<RegisterForm>({
     firstName: '',
     lastName: '',
     email: '',
@@ -13,11 +21,11 @@ export function Register() {
   const { register, loading, error } = useAuth();
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
       await register(form);

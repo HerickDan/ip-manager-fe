@@ -1,8 +1,16 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, type FormEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useBeneficiaries } from '../../hooks';
 
-const initialForm = {
+interface BeneficiaryFormData {
+  firstName: string;
+  lastName: string;
+  familyMemberNumber: number;
+  number: { countryCode: number; ddd: string; prefixLine: string };
+  address: { name: string; number: string; complement: string };
+}
+
+const initialForm: BeneficiaryFormData = {
   firstName: '',
   lastName: '',
   familyMemberNumber: 1,
@@ -11,15 +19,15 @@ const initialForm = {
 };
 
 export function BeneficiaryForm() {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const isEditing = !!id;
   const navigate = useNavigate();
   const { create, update, findById, loading, error } = useBeneficiaries();
-  const [form, setForm] = useState(initialForm);
+  const [form, setForm] = useState<BeneficiaryFormData>(initialForm);
 
   const loadBeneficiary = useCallback(async () => {
     try {
-      const data = await findById(id);
+      const data = await findById(id!);
       if (data) {
         setForm({
           firstName: data.firstName || '',
@@ -48,16 +56,16 @@ export function BeneficiaryForm() {
     }
   }, [isEditing, loadBeneficiary]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (name.startsWith('number.')) {
-      const field = name.split('.')[1];
+      const field = name.split('.')[1] as keyof BeneficiaryFormData['number'];
       setForm((prev) => ({
         ...prev,
         number: { ...prev.number, [field]: value },
       }));
     } else if (name.startsWith('address.')) {
-      const field = name.split('.')[1];
+      const field = name.split('.')[1] as keyof BeneficiaryFormData['address'];
       setForm((prev) => ({
         ...prev,
         address: { ...prev.address, [field]: value },
@@ -67,11 +75,11 @@ export function BeneficiaryForm() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
       if (isEditing) {
-        await update(id, form);
+        await update(id!, form);
       } else {
         await create(form);
       }

@@ -2,11 +2,19 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { beneficiariesService } from '../../services';
 import './Beneficiaries.css';
+interface Beneficiary {
+  id: string;
+  firstName: string;
+  lastName: string;
+  number?: { ddd?: string; prefixLine?: string };
+  address?: { name?: string; number?: string };
+  familyMemberNumber?: number;
+}
 
 export function BeneficiaryList() {
-  const [beneficiaries, setBeneficiaries] = useState([]);
+  const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,17 +24,16 @@ export function BeneficiaryList() {
   const loadBeneficiaries = async () => {
     setLoading(true);
     try {
-      // Note: The current API doesn't have a list endpoint.
-      // This will be populated when the API is extended.
-      setBeneficiaries([]);
-    } catch (err) {
+      const { data } = await beneficiariesService.findAll();
+      setBeneficiaries(data);
+    } catch {
       setError('Erro ao carregar beneficiários');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDisable = async (id) => {
+  const handleDisable = async (id: string) => {
     if (!window.confirm('Tem certeza que deseja desativar este beneficiário?')) return;
     try {
       await beneficiariesService.disable(id);
