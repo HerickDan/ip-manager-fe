@@ -1,24 +1,32 @@
-import logo from './logo.svg';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
+import { Layout } from './pages/Layout/Layout';
+import { Login } from './pages/Login/Login';
+import { Register } from './pages/Register/Register';
+import { Dashboard } from './pages/Dashboard/Dashboard';
+import { BeneficiaryList } from './pages/Beneficiaries/BeneficiaryList';
+import { BeneficiaryForm } from './pages/Beneficiaries/BeneficiaryForm';
+import { Stock } from './pages/Stock/Stock';
+import { Distributions } from './pages/Distributions/Distributions';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/registrar" element={<Register />} />
+
+      <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+        <Route index element={<Dashboard />} />
+        <Route path="beneficiarios" element={<BeneficiaryList />} />
+        <Route path="beneficiarios/novo" element={<BeneficiaryForm />} />
+        <Route path="beneficiarios/:id/editar" element={<BeneficiaryForm />} />
+        <Route path="estoque" element={<Stock />} />
+        <Route path="distribuicoes" element={<Distributions />} />
+      </Route>
+
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
 
