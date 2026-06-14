@@ -1,37 +1,32 @@
 import { useEffect, useState } from 'react';
-import { useAuth, useBaskets, useBeneficiaries } from '../../hooks';
+import { useAuth, useBaskets } from '../../hooks';
 import { beneficiariesService, distributionsService } from '../../services';
 import './Dashboard.css';
+import { log } from 'node:console';
 
 export function Dashboard() {
   const { user } = useAuth();
-  //const {beneficiaries} = useBeneficiaries()
   const [beneficiaries, setBeneficiaries] = useState<any[]>([]);
   const [distributions, setDistributions] = useState<any[]>([]);
-  const { stock, getStock, addStock } = useBaskets();
+  const { stock, getStock } = useBaskets();
   useEffect(() => {
     getStock();
   }, [getStock]);
-  const [error, setError] = useState(String)
   console.log(beneficiaries)
-  const [loading, setLoading] = useState(true);
   useEffect(() => {
     loadData();
     getStock()
-  }, []);
+  }, [getStock]);
 
 
   const loadData = async () => {
-    setLoading(true);
     try {
       const { data: beneficiariesData } = await beneficiariesService.findAll();
       const { data: distributionsData } = await distributionsService.findAll();
       setBeneficiaries(beneficiariesData);
       setDistributions(distributionsData);
     } catch {
-      setError('Erro ao carregar dados');
-    } finally {
-      setLoading(false);
+      log('Erro ao carregar dados');
     }
   };
   return (
