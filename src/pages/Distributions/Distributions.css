@@ -46,3 +46,13 @@ small {
   margin-top: 4px;
   font-size: 12px;
 }
+
+@media (max-width: 768px) {
+  .input-row {
+    flex-direction: column;
+  }
+
+  .input-row .btn {
+    width: 100%;
+  }
+}

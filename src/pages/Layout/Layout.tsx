@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks';
 import './Layout.css';
 
 export function Layout() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -13,13 +15,19 @@ export function Layout() {
 
   return (
     <div className="layout">
-      <aside className="sidebar">
+      <button className="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
+        {sidebarOpen ? '✕' : '☰'}
+      </button>
+
+      <div className={`sidebar-overlay ${sidebarOpen ? 'open' : ''}`} onClick={() => setSidebarOpen(false)} />
+
+      <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <h1>ipManager</h1>
           <span className="sidebar-subtitle">Igreja</span>
         </div>
 
-        <nav className="sidebar-nav">
+        <nav className="sidebar-nav" onClick={() => setSidebarOpen(false)}>
           <NavLink to="/" end>Dashboard</NavLink>
           <NavLink to="/beneficiarios">Beneficiários</NavLink>
           <NavLink to="/estoque">Estoque</NavLink>

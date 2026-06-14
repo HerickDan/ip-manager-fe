@@ -33,3 +33,9 @@
 .stock-form {
   margin-top: 16px;
 }
+
+@media (max-width: 768px) {
+  .stock-quantity {
+    font-size: 48px;
+  }
+}
