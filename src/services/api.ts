@@ -8,17 +8,6 @@ const api = axios.create({
   },
 });
 
-api.interceptors.request.use((config) => {
-  const stored = localStorage.getItem('@ipmanager:user');
-  if (stored) {
-    const user = JSON.parse(stored);
-    if (user.token) {
-      config.headers.Authorization = `Bearer ${user.token}`;
-    }
-  }
-  return config;
-});
-
 api.interceptors.response.use(
   (response) => response,
   (error) => {
