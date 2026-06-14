@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useAuth, useBaskets } from '../../hooks';
 import { beneficiariesService, distributionsService } from '../../services';
 import './Dashboard.css';
-import { log } from 'node:console';
 
 export function Dashboard() {
   const { user } = useAuth();
@@ -26,7 +25,7 @@ export function Dashboard() {
       setBeneficiaries(beneficiariesData);
       setDistributions(distributionsData);
     } catch {
-      log('Erro ao carregar dados');
+      console.log('Erro ao carregar dados');
     }
   };
   return (
