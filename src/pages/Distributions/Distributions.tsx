@@ -27,7 +27,7 @@ export function Distributions() {
 
   const loadBeneficiaries = async () => {
     try {
-      const { data } = await beneficiariesService.findAll();
+      const { data } = await beneficiariesService.findAll(true);
       setBeneficiaries(data);
     } catch {
       // silently fail

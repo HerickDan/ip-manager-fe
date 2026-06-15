@@ -20,7 +20,7 @@ export function Dashboard() {
 
   const loadData = async () => {
     try {
-      const { data: beneficiariesData } = await beneficiariesService.findAll();
+      const { data: beneficiariesData } = await beneficiariesService.findAll(true);
       const { data: distributionsData } = await distributionsService.findAll();
       setBeneficiaries(beneficiariesData);
       setDistributions(distributionsData);
