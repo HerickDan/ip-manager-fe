@@ -15,17 +15,19 @@ export function BeneficiaryList() {
   const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [active, setActive] = useState(true)
   const navigate = useNavigate();
 
   useEffect(() => {
-    loadBeneficiaries();
+    loadBeneficiaries(true);
   }, []);
 
-  const loadBeneficiaries = async () => {
+  const loadBeneficiaries = async (active: boolean) => {
     setLoading(true);
     try {
-      const { data } = await beneficiariesService.findAll();
+      const { data } = await beneficiariesService.findAll(active);
       setBeneficiaries(data);
+      setActive(active)
     } catch {
       setError('Erro ao carregar beneficiários');
     } finally {
@@ -34,14 +36,28 @@ export function BeneficiaryList() {
   };
 
   const handleDisable = async (id: string) => {
-    if (!window.confirm('Tem certeza que deseja desativar este beneficiário?')) return;
     try {
       await beneficiariesService.disable(id);
-      loadBeneficiaries();
+      loadBeneficiaries(true);
     } catch {
       setError('Erro ao desativar beneficiário');
     }
   };
+
+
+  const handleActive = async (id: string) => {
+    try {
+      await beneficiariesService.active(id);
+      loadBeneficiaries(true);
+    } catch {
+      setError('Erro ao desativar beneficiário');
+    }
+  };
+
+  const disableOrAble = (id: string) =>{
+    active == true ? handleDisable(id) : handleActive(id)
+    
+  }
 
   if (loading) return <div className="loading">Carregando...</div>;
 
@@ -57,15 +73,27 @@ export function BeneficiaryList() {
         </Link>
       </div>
 
+      <div className="filter-tabs">
+        <button
+          className={`filter-tab ${active ? 'active' : ''}`}
+          onClick={() => loadBeneficiaries(true)}
+        >
+          Ativos
+        </button>
+        <button
+          className={`filter-tab ${!active ? 'active' : ''}`}
+          onClick={() => loadBeneficiaries(false)}
+        >
+          Inativos
+        </button>
+      </div>
+
       {error && <div className="alert alert-error">{error}</div>}
 
       {beneficiaries.length === 0 ? (
         <div className="card">
           <div className="table-empty">
-            <p>Nenhum beneficiário cadastrado ainda.</p>
-            <Link to="/beneficiarios/novo" className="btn btn-primary" style={{ marginTop: 16, display: 'inline-block' }}>
-              Cadastrar primeiro beneficiário
-            </Link>
+            <p>Nenhum beneficiário {active ? 'ativo' : 'inativo'} encontrado.</p>
           </div>
         </div>
       ) : (
@@ -95,8 +123,8 @@ export function BeneficiaryList() {
                       <button className="btn btn-secondary btn-sm" onClick={() => navigate(`/beneficiarios/${b.id}/editar`)}>
                         Editar
                       </button>
-                      <button className="btn btn-danger btn-sm" onClick={() => handleDisable(b.id)}>
-                        Desativar
+                      <button className="btn btn-danger btn-sm" onClick={() => disableOrAble(b.id)}>
+                        {active == true ? "Desativar" : "Ativar"}
                       </button>
                     </div>
                   </td>

@@ -5,5 +5,6 @@ export const beneficiariesService = {
   findById: (id: string) => api.get(`/beneficiaries/${id}`),
   update: (id: string, data: unknown) => api.patch(`/beneficiaries/${id}`, data),
   disable: (id: string) => api.delete(`/beneficiaries/${id}`),
-  findAll: () => api.get("/beneficiaries")
+  active: (id: String) => api.patch(`beneficiaries/active/${id}`),
+  findAll: (active: Boolean) => api.get(`/beneficiaries?active=${active}`)
 };
