@@ -55,7 +55,7 @@ export function BeneficiaryList() {
   };
 
   const disableOrAble = (id: string) =>{
-    active == true ? handleDisable(id) : handleActive(id)
+    active === true ? handleDisable(id) : handleActive(id)
     
   }
 
@@ -124,7 +124,7 @@ export function BeneficiaryList() {
                         Editar
                       </button>
                       <button className="btn btn-danger btn-sm" onClick={() => disableOrAble(b.id)}>
-                        {active == true ? "Desativar" : "Ativar"}
+                        {active === true ? "Desativar" : "Ativar"}
                       </button>
                     </div>
                   </td>
