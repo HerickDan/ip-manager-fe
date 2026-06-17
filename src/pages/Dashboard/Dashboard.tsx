@@ -10,8 +10,7 @@ export function Dashboard() {
   const { stock, getStock } = useBaskets();
   useEffect(() => {
     getStock();
-  }, [getStock]);
-  console.log(beneficiaries)
+  }, [getStock])
   useEffect(() => {
     loadData();
     getStock()
