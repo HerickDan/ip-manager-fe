@@ -117,9 +117,6 @@ export function BeneficiaryList() {
                   <td>{b.familyMemberNumber}</td>
                   <td>
                     <div className="actions">
-                      <button className="btn btn-secondary btn-sm" onClick={() => navigate(`/beneficiarios/${b.id}`)}>
-                        Ver
-                      </button>
                       <button className="btn btn-secondary btn-sm" onClick={() => navigate(`/beneficiarios/${b.id}/editar`)}>
                         Editar
                       </button>
